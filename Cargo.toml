@@ -1,0 +1,25 @@
+[package]
+name = "gray-acp-serve"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Expose gray as an ACP (Agent Client Protocol) agent: stdio JSON-RPC that runs each prompt as a `gray -p --json` turn"
+
+[lib]
+name = "gray_acp_serve"
+path = "src/lib.rs"
+
+[[bin]]
+name = "gray-acp"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+strip = true
