@@ -14,8 +14,8 @@ Darwin*)
     *) rel="x86_64-unknown-linux-musl/gray-acp" ;;
     esac ;;
 esac
-if [ -x "$here/$rel" ]; then exec "$here/$rel" sidecar "$@"; fi
-bin="${{GRAY_ACP_BIN:-}}"
+if [ -x "$here/$rel" ]; then exec "$here/$rel" "$@"; fi
+bin="${GRAY_ACP_BIN:-}"
 if [ -z "$bin" ]; then
     for cand in "$here/target/release/gray-acp.exe" "$here/target/release/gray-acp" "$here/target/debug/gray-acp.exe" "$here/target/debug/gray-acp"; do
         if [ -x "$cand" ]; then bin="$cand"; break; fi
@@ -25,4 +25,4 @@ if [ -z "$bin" ]; then
     echo "gray-acp binary not found under $here/target (run cargo build first)" >&2
     exit 1
 fi
-exec "$bin" sidecar "$@"
+exec "$bin" "$@"
