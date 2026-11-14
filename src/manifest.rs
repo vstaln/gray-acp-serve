@@ -20,6 +20,7 @@ pub fn manifest() -> Value {
         "sidecar_args": ["sidecar"],
         "tools": [],
         "hooks": [],
+        "description": "serve gray as an ACP agent over stdio",
         "commands": [],
         "completion": [],
     })
