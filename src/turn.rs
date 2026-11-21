@@ -87,10 +87,7 @@ pub fn run(
     let mut child = match cmd.spawn() {
         Ok(c) => c,
         Err(e) => {
-            return Err((
-                -32000,
-                format!("spawn {}: {e}", gray_bin()),
-            ));
+            return Err((-32000, format!("spawn {}: {e}", gray_bin())));
         }
     };
     let stdout = child.stdout.take().expect("piped stdout");
@@ -239,10 +236,7 @@ fn finish(
             } else {
                 format!("gray: {message} (hint: {hint})")
             };
-            Err((
-                -32000,
-                text,
-            ))
+            Err((-32000, text))
         }
         _ => {
             let tail = ring
@@ -298,8 +292,16 @@ fn map_progress(v: &Value, out: &mut impl std::io::Write, acp_sid: &str, turn: &
             }
         }
         Some("provider_retry") => {
-            let detail = v.get("detail").and_then(Value::as_str).unwrap_or("retrying");
-            send_text(out, acp_sid, "agent_thought_chunk", &format!("provider retry: {detail}"));
+            let detail = v
+                .get("detail")
+                .and_then(Value::as_str)
+                .unwrap_or("retrying");
+            send_text(
+                out,
+                acp_sid,
+                "agent_thought_chunk",
+                &format!("provider retry: {detail}"),
+            );
         }
         Some("compacted") => {
             send_text(out, acp_sid, "agent_thought_chunk", "(context compacted)");

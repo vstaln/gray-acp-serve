@@ -59,7 +59,15 @@ pub fn serve() -> i32 {
                 _ => {}
             },
             Msg::Request { id, method, params } => {
-                dispatch(&mut out, &id, &method, &params, &mut sessions, &inbox, &mut deferred);
+                dispatch(
+                    &mut out,
+                    &id,
+                    &method,
+                    &params,
+                    &mut sessions,
+                    &inbox,
+                    &mut deferred,
+                );
             }
         }
     }
@@ -79,7 +87,12 @@ fn dispatch(
         // ---- gray sidecar surface (plugin check / installed plugin) ----
         "plugin/manifest" => wire::respond(out, id, manifest::manifest()),
         "tool/call" | "prompt/context" | "command/run" | "tool/before" => {
-            wire::respond_error(out, id, METHOD_NOT_FOUND, "acp-serve exposes no gray plugin surfaces");
+            wire::respond_error(
+                out,
+                id,
+                METHOD_NOT_FOUND,
+                "acp-serve exposes no gray plugin surfaces",
+            );
         }
 
         // ---- ACP lifecycle ----
@@ -89,8 +102,13 @@ fn dispatch(
         "session/prompt" => session_prompt(out, id, params, sessions, inbox, deferred),
 
         // Honestly refused: capabilities below were never advertised.
-        "session/load" | "session/resume" | "session/fork" | "session/list"
-        | "session/set_mode" | "session/set_model" | "session/set_config_option" => {
+        "session/load"
+        | "session/resume"
+        | "session/fork"
+        | "session/list"
+        | "session/set_mode"
+        | "session/set_model"
+        | "session/set_config_option" => {
             wire::respond_error(out, id, METHOD_NOT_FOUND, "not supported by gray-acp v1");
         }
 
@@ -168,7 +186,15 @@ fn session_prompt(
     let session = sessions.get_mut(&sid).expect("checked above");
     let cwd = session.cwd.clone();
     let gray_session = session.gray_session.clone();
-    match turn::run(out, &sid, &cwd, gray_session.as_deref(), &text, inbox, deferred) {
+    match turn::run(
+        out,
+        &sid,
+        &cwd,
+        gray_session.as_deref(),
+        &text,
+        inbox,
+        deferred,
+    ) {
         Ok((result, new_gray_session)) => {
             if let Some(gs) = new_gray_session {
                 if let Some(s) = sessions.get_mut(&sid) {
